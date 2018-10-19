@@ -10,11 +10,11 @@ class Start {
 	{
 		double step = (X_LAST - X_FIRST) / (STEPS + 1);
 		for (double x = X_FIRST; (step > 0 && x < (X_LAST + 0.25 * step))
-			 || (step < 0 && x > (X_LAST - 0.25 * step));
+			 || (step < 0 && x > (X_LAST + 0.25 * step));
 			 x += step) {
 			double wartoscSinCos = Math.sin(x) * Math.cos(x);
 			double przyblizenie = szereg(x);
-			double roznica = Math.abs(wartoscSinCos - przyblizenie);
+			double roznica = wartoscSinCos - przyblizenie;
 			System.out.printf(
 				"x=%7.4f sin(x)cos(x)=%8.6f aprox=%8.6f delta=%10.8f\n", x,
 				wartoscSinCos, przyblizenie, roznica);
