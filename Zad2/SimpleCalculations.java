@@ -18,7 +18,27 @@ class SimpleCalculations {
 	public Point[] equidistantPoints(
 		Point firstPoint, Point secondPoint, int points)
 	{
-		return null; // oczywiście, do zmiany, ale bez tej linijki kompilator sygnalizuje błąd
+		if (firstPoint == null || secondPoint == null || points == 0)
+			return null;
+
+		Point[] output = new Point[points];
+		for (int loopCounter = 0; loopCounter < points; ++loopCounter) {
+			output[loopCounter] = new Point();
+			output[loopCounter].setNumberOfDimensions(
+				firstPoint.getNumberOfDimensions());
+		}
+
+		for (int dimension = 0; dimension < firstPoint.getNumberOfDimensions();
+			 ++dimension) {
+			double step = (secondPoint.getPosition(dimension)
+							  - firstPoint.getPosition(dimension))
+				/ (points + 1);
+			for (int j = 0; j < points; ++j) {
+				output[j].setPosition(dimension, (j + 1) * step);
+			}
+		}
+
+		return output;
 	}
 
 	/**
