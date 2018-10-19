@@ -39,5 +39,6 @@ BinPackParameters: false
 ---
 Language: Java
 ReflowComments: false
+AllowShortFunctionsOnASingleLine: None
 # Language: Cpp
 ...
