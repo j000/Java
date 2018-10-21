@@ -5,6 +5,42 @@ public class Point {
 	private int dimensions;
 	private double[] position;
 
+	public String toString()
+	{
+		String out = "dims: " + dimensions + ", (";
+		for (int i = 0; i < dimensions; ++i) {
+			out += position[i] + ",";
+		}
+		out += "\b)";
+		return out;
+	}
+
+	public int hashCode()
+	{
+		return java.util.Arrays.hashCode(position);
+	}
+
+	public boolean equals(Object o)
+	{
+		if (o == this) {
+			return true;
+		}
+		if (!(o instanceof Point)) {
+			return false;
+		}
+		Point test = (Point)o;
+		if (test.getNumberOfDimensions() != getNumberOfDimensions())
+			return false;
+
+		final double EPS = 1e-10;
+		for (int i = 0; i < getNumberOfDimensions(); ++i) {
+			if (Math.abs(test.getPosition(i) - getPosition(i)) > EPS) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Metoda pozwala na ustawienie liczby wymiarów.
 	 * Efektem ubocznym jest ustawienie wszystkich współrzędnych
