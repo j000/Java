@@ -1,3 +1,5 @@
+// Jarosław Rymut
+// Zadanie 02
 class SimpleCalculations {
 	/**
 	 * Metoda zwraca tablicę zawierającą point obiektów typu Point. Punkty
@@ -52,7 +54,26 @@ class SimpleCalculations {
 	 */
 	public Point geometricCenter(Point[] points)
 	{
-		return null; // oczywiście, do zmiany, ale bez tej linijki kompilator sygnalizuje błąd
+		if (points == null || points.length == 0)
+			return null;
+
+		Point result = new Point();
+		result.setNumberOfDimensions(points[0].getNumberOfDimensions());
+
+		for (int dimension = 0; dimension < result.getNumberOfDimensions();
+			 ++dimension) {
+			double coordinate = 0;
+			for (int p = 0; p < points.length; ++p) {
+				coordinate += points[p].getPosition(dimension) / points.length;
+			}
+			result.setPosition(dimension, coordinate);
+		}
+		return result;
+	}
+
+	private double square(double x)
+	{
+		return x * x;
 	}
 
 	/**
@@ -69,7 +90,33 @@ class SimpleCalculations {
 	 */
 	public Point next(Point firstPoint, Point secondPoint, double distance)
 	{
-		return null; // oczywiście, do zmiany, ale bez tej linijki kompilator sygnalizuje błąd
+		if (firstPoint == null || secondPoint == null)
+			return null;
+
+		if (distance == 0)
+			return secondPoint;
+
+		Point result = new Point();
+		result.setNumberOfDimensions(firstPoint.getNumberOfDimensions());
+
+		double length = 0;
+		for (int dimension = 0; dimension < result.getNumberOfDimensions();
+			 ++dimension) {
+			length += square(
+				secondPoint.getPosition(dimension)
+				- firstPoint.getPosition(dimension));
+		}
+		length = Math.sqrt(length);
+		for (int dimension = 0; dimension < result.getNumberOfDimensions();
+			 ++dimension) {
+			result.setPosition(
+				dimension,
+				secondPoint.getPosition(dimension)
+					+ distance
+						* (secondPoint.getPosition(dimension)
+						   - firstPoint.getPosition(dimension)));
+		}
+		return result;
 	}
 }
 // vim: tabstop=4 shiftwidth=0 noexpandtab
