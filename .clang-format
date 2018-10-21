@@ -40,5 +40,6 @@ BinPackParameters: false
 Language: Java
 ReflowComments: false
 AllowShortFunctionsOnASingleLine: None
+BreakAfterJavaFieldAnnotations: true
 # Language: Cpp
 ...

@@ -31,7 +31,7 @@ class SimpleCalculations {
 		for (int dimension = 0; dimension < firstPoint.getNumberOfDimensions();
 			 ++dimension) {
 			double step = (secondPoint.getPosition(dimension)
-							  - firstPoint.getPosition(dimension))
+						   - firstPoint.getPosition(dimension))
 				/ (points + 1);
 			for (int j = 0; j < points; ++j) {
 				output[j].setPosition(dimension, (j + 1) * step);
