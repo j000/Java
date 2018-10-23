@@ -116,7 +116,8 @@ class SimpleCalculations {
 				secondPoint.getPosition(dimension)
 					+ distance
 						* (secondPoint.getPosition(dimension)
-						   - firstPoint.getPosition(dimension)));
+						   - firstPoint.getPosition(dimension))
+						/ length);
 		}
 		return result;
 	}

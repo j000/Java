@@ -136,10 +136,16 @@ public class Tests {
 		assertThat(result, equalTo(createPoint(new double[] {-2})));
 
 		result = calc.next(
-			createPoint(new double[] {0, 0}),
-			createPoint(new double[] {-1, 1}),
+			createPoint(new double[] {0, 4}),
+			createPoint(new double[] {-1, 4}),
 			1);
-		assertThat(result, equalTo(createPoint(new double[] {-2, 2})));
+		assertThat(result, equalTo(createPoint(new double[] {-2, 4})));
+
+		result = calc.next(
+			createPoint(new double[] {1, 2}),
+			createPoint(new double[] {1, 1}),
+			2);
+		assertThat(result, equalTo(createPoint(new double[] {1, -1})));
 	}
 }
 
