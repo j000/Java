@@ -22,12 +22,15 @@ public class Ship {
 	 *
 	 * @param limit obiekt klasy ShipSizeLimit zawierający limity liczby okrętów.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static void setLimit(ShipSizeLimit limit)
 	{
 		Ship.limit = limit;
+		// error: new Vector<Ship>[xxx]
+		// warning: new Vector[xxx]
+		// no proper way?
 		otherShips = new Vector[limit.getNumberOfSizes() + 1];
-		// C++: for(Vector<Ship>& i: otherShips) {
+		// C++: for(Vector<Ship>& i : otherShips) {
 		// Java fails: for (Vector<Ship> i : otherShips) {
 		for (int i = 0; i < otherShips.length; ++i) {
 			otherShips[i] = new Vector<Ship>();
@@ -55,13 +58,16 @@ public class Ship {
 	public static Ship getShip(int size)
 	{
 		// nie zainicjalizowany
-		if (limit == null || otherShips == null || size >= otherShips.length
-			|| otherShips[size] == null)
+		// lub coś innego nie tak
+		if (limit == null || otherShips == null || size < 0
+			|| size >= otherShips.length || otherShips[size] == null)
 			return null;
 
+		// ponad limit
 		if (otherShips[size].size() >= limit.getLimit(size))
 			return null;
 
+		// tworzymy statek
 		Ship brandNewShinyShip = new Ship(size);
 		otherShips[size].add(brandNewShinyShip);
 
