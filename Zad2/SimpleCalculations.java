@@ -36,7 +36,9 @@ class SimpleCalculations {
 						   - firstPoint.getPosition(dimension))
 				/ (points + 1);
 			for (int j = 0; j < points; ++j) {
-				output[j].setPosition(dimension, (j + 1) * step);
+				output[j].setPosition(
+					dimension,
+					(j + 1) * step + firstPoint.getPosition(dimension));
 			}
 		}
 
