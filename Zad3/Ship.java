@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 /**
  * Klasa reprezentująca okręt o określonym rozmiarze. Obiekty posiadają pole
  * shipwreck, które pozwala określić stan w jakim okręt się znajduje.
@@ -6,6 +8,12 @@ public class Ship {
 	private boolean shipwreck;
 	private int size;
 	private static ShipSizeLimit limit;
+	private static Vector<Ship>[] otherShips;
+
+	private Ship(int _size)
+	{
+		size = _size;
+	}
 
 	/**
 	 * Metoda pozwala na ustalenie limitu ilości jednostek. Wywołanie metody
@@ -14,9 +22,16 @@ public class Ship {
 	 *
 	 * @param limit obiekt klasy ShipSizeLimit zawierający limity liczby okrętów.
 	 */
+	@SuppressWarnings("unchecked")
 	public static void setLimit(ShipSizeLimit limit)
 	{
 		Ship.limit = limit;
+		otherShips = new Vector[limit.getNumberOfSizes() + 1];
+		// C++: for(Vector<Ship>& i: otherShips) {
+		// Java fails: for (Vector<Ship> i : otherShips) {
+		for (int i = 0; i < otherShips.length; ++i) {
+			otherShips[i] = new Vector<Ship>();
+		}
 	}
 
 	/**
@@ -39,7 +54,18 @@ public class Ship {
 	 */
 	public static Ship getShip(int size)
 	{
-		return null; // to jest oczywiście do wymiany
+		// nie zainicjalizowany
+		if (limit == null || otherShips == null || size >= otherShips.length
+			|| otherShips[size] == null)
+			return null;
+
+		if (otherShips[size].size() >= limit.getLimit(size))
+			return null;
+
+		Ship brandNewShinyShip = new Ship(size);
+		otherShips[size].add(brandNewShinyShip);
+
+		return brandNewShinyShip;
 	}
 
 	/**
@@ -48,6 +74,7 @@ public class Ship {
 	 */
 	public void shipwreck()
 	{
+		otherShips[size].remove(this);
 		shipwreck = true;
 	}
 
@@ -61,3 +88,4 @@ public class Ship {
 		return shipwreck;
 	}
 }
+// vim: tabstop=4 shiftwidth=0 noexpandtab
