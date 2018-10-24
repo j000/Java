@@ -26,12 +26,8 @@ public class Ship {
 	public static void setLimit(ShipSizeLimit limit)
 	{
 		Ship.limit = limit;
-		// error: new Vector<Ship>[xxx]
-		// warning: new Vector[xxx]
-		// no proper way?
 		otherShips = new Vector[limit.getNumberOfSizes() + 1];
-		// C++: for(Vector<Ship>& i : otherShips) {
-		// Java fails: for (Vector<Ship> i : otherShips) {
+		// C++: for(Vector<Ship>& i : otherShips) { i = new Vector<Ship>(); }
 		for (int i = 0; i < otherShips.length; ++i) {
 			otherShips[i] = new Vector<Ship>();
 		}
