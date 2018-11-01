@@ -8,55 +8,56 @@ public class Tests {
 	@Test
 	public void test1()
 	{
-		Ship result;
+		assertThat("before proper initalization", Ship.getShip(0), is(nullValue()));
 
-		result = Ship.getShip(0);
-		assertThat("before proper initalization", result, is(nullValue()));
+		assertThat("before proper initalization", Ship.getShip(1), is(nullValue()));
 
-		result = Ship.getShip(1);
-		assertThat("before proper initalization", result, is(nullValue()));
-
-		result = Ship.getShip(20);
-		assertThat("before proper initalization", result, is(nullValue()));
+		assertThat("before proper initalization", Ship.getShip(20), is(nullValue()));
 
 		Ship.setLimit(new ShipSizeLimit(new int[] {1, 2, 1}));
 
-		result = Ship.getShip(0);
-		assertThat("getShip(0) always returns null", result, is(nullValue()));
+		assertThat("getShip(0) always returns null", Ship.getShip(0), is(nullValue()));
 
-		result = Ship.getShip(1);
-		assertThat(result, is(not(nullValue())));
+		assertThat("create ship", Ship.getShip(1), is(not(nullValue())));
 
-		result = Ship.getShip(1);
-		assertThat("hit limit", result, is(nullValue()));
+		assertThat("hit limit", Ship.getShip(1), is(nullValue()));
 
-		result = Ship.getShip(2);
-		assertThat(result, is(not(nullValue())));
+		assertThat("create ship", Ship.getShip(2), is(not(nullValue())));
 
 		Ship wreck = Ship.getShip(2);
-		assertThat(wreck, is(not(nullValue())));
+		assertThat("create ship", wreck, is(not(nullValue())));
 
-		result = Ship.getShip(2);
-		assertThat(result, is(nullValue()));
+		assertThat("hit limit", Ship.getShip(2), is(nullValue()));
 
 		wreck.shipwreck();
 
-		result = Ship.getShip(2);
-		assertThat(result, is(not(nullValue())));
+		wreck = Ship.getShip(2);
+		assertThat("after wrecking", wreck, is(not(nullValue())));
 
-		result = Ship.getShip(2);
-		assertThat(result, is(nullValue()));
+		assertThat(Ship.getShip(2), is(nullValue()));
 
-		result = Ship.getShip(1);
-		assertThat(result, is(nullValue()));
+		assertThat(Ship.getShip(1), is(nullValue()));
 
-		result = Ship.getShip(3);
-		assertThat(result, is(not(nullValue())));
+		assertThat(Ship.getShip(3), is(not(nullValue())));
 
-		result = Ship.getShip(3);
-		assertThat(result, is(nullValue()));
+		assertThat(Ship.getShip(3), is(nullValue()));
 
-		result = Ship.getShip(20);
-		assertThat(result, is(nullValue()));
+		assertThat("outside limits", Ship.getShip(4), is(nullValue()));
+
+		assertThat("outside limits", Ship.getShip(20), is(nullValue()));
+
+		wreck.shipwreck();
+
+		Ship.setLimit(new ShipSizeLimit(new int[] {0, 0, 0, 1}));
+
+		assertThat("new limit", Ship.getShip(1), is(nullValue()));
+
+		assertThat("new limit (old should produce)", Ship.getShip(2), is(nullValue()));
+
+		assertThat("new limit", Ship.getShip(3), is(nullValue()));
+
+		assertThat("new limit (old shouldn't produce)", Ship.getShip(4), is(not(nullValue())));
+
+		assertThat("new limit", Ship.getShip(4), is(nullValue()));
 	}
 }
