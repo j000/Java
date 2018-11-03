@@ -1,8 +1,12 @@
-import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
-import org.hamcrest.beans.*;
-import org.hamcrest.core.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+
+// JUnit4
+import static org.junit.Assert.*;
 import org.junit.Test;
+
+// Junit5 (hopefully)
+// import org.junit.jupiter.api.*;
 
 public class Tests {
 	@Test
