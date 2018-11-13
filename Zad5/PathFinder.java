@@ -38,8 +38,8 @@ class PathFinder implements PathFinderInterface {
 			DFSHelper(from, to, transfers);
 		}
 
-		public void
-		DFSHelper(BusStopInterface from, BusStopInterface to, int transfers)
+		public void DFSHelper(
+			BusStopInterface from, BusStopInterface to, int transfers)
 		{
 			if (transfers < 0)
 				return;
@@ -65,8 +65,7 @@ class PathFinder implements PathFinderInterface {
 					continue;
 
 				if (debug)
-					System.out.println(
-						from.getName() + ": Checking to "
+					System.out.println(from.getName() + ": Checking to "
 						+ destination.stop.getName());
 
 				if (!usedBuses.empty() && usedBuses.peek() != destination.bus) {

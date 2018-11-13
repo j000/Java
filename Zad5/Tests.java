@@ -34,26 +34,26 @@ public class Tests {
 
 		BusLineInterface liniaCzerwona
 			= new BusLine(new BusStopInterface[] {busStops.get('A'),
-												  busStops.get('B'),
-												  busStops.get('C'),
-												  busStops.get('D'),
-												  busStops.get('E'),
-												  busStops.get('F'),
-												  busStops.get('G')});
+				busStops.get('B'),
+				busStops.get('C'),
+				busStops.get('D'),
+				busStops.get('E'),
+				busStops.get('F'),
+				busStops.get('G')});
 
 		BusLineInterface liniaZielona
 			= new BusLine(new BusStopInterface[] {busStops.get('H'),
-												  busStops.get('I'),
-												  busStops.get('C'),
-												  busStops.get('J'),
-												  busStops.get('K')});
+				busStops.get('I'),
+				busStops.get('C'),
+				busStops.get('J'),
+				busStops.get('K')});
 
 		BusLineInterface liniaNiebieska
 			= new BusLine(new BusStopInterface[] {busStops.get('L'),
-												  busStops.get('E'),
-												  busStops.get('M'),
-												  busStops.get('N'),
-												  busStops.get('O')});
+				busStops.get('E'),
+				busStops.get('M'),
+				busStops.get('N'),
+				busStops.get('O')});
 
 		PathFinderInterface tested = new PathFinder();
 		assertThat(
@@ -143,21 +143,21 @@ public class Tests {
 
 		BusLineInterface liniaCzerwona
 			= new BusLine(new BusStopInterface[] {busStops.get('A'),
-												  busStops.get('B'),
-												  busStops.get('C'),
-												  busStops.get('D')});
+				busStops.get('B'),
+				busStops.get('C'),
+				busStops.get('D')});
 
 		BusLineInterface liniaZielona
 			= new BusLine(new BusStopInterface[] {busStops.get('E'),
-												  busStops.get('B'),
-												  busStops.get('F'),
-												  busStops.get('G')});
+				busStops.get('B'),
+				busStops.get('F'),
+				busStops.get('G')});
 
 		BusLineInterface liniaNiebieska
 			= new BusLine(new BusStopInterface[] {busStops.get('H'),
-												  busStops.get('C'),
-												  busStops.get('F'),
-												  busStops.get('I')});
+				busStops.get('C'),
+				busStops.get('F'),
+				busStops.get('I')});
 
 		PathFinderInterface tested = new PathFinder();
 		assertThat(
