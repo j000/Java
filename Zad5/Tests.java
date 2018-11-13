@@ -122,6 +122,74 @@ public class Tests {
 	}
 
 	@Test
+	public void test_example2()
+	{
+		Bus bus100 = new Bus(100);
+		Bus bus200 = new Bus(200);
+		Bus bus300 = new Bus(300);
+		Bus bus400 = new Bus(400);
+
+		HashMap<Character, BusStop> busStops = new HashMap<>();
+		for (char loop = 'A'; loop <= 'T'; ++loop) {
+			busStops.put(loop, new BusStop(String.valueOf(loop)));
+		}
+
+		BusLineInterface liniaCzerwona
+			= new BusLine(new BusStopInterface[] {busStops.get('A'),
+				busStops.get('B'),
+				busStops.get('C'),
+				busStops.get('D'),
+				busStops.get('E'),
+				busStops.get('F'),
+				busStops.get('G')});
+
+		BusLineInterface liniaZielona
+			= new BusLine(new BusStopInterface[] {busStops.get('H'),
+				busStops.get('I'),
+				busStops.get('C'),
+				busStops.get('J'),
+				busStops.get('K')});
+
+		BusLineInterface liniaNiebieska
+			= new BusLine(new BusStopInterface[] {busStops.get('L'),
+				busStops.get('E'),
+				busStops.get('M'),
+				busStops.get('N'),
+				busStops.get('O')});
+
+		BusLineInterface liniaPomaranczowa
+			= new BusLine(new BusStopInterface[] {busStops.get('P'),
+				busStops.get('R'),
+				busStops.get('J'),
+				busStops.get('S'),
+				busStops.get('M'),
+				busStops.get('N'),
+				busStops.get('T')});
+
+		PathFinderInterface tested = new PathFinder();
+		assertThat(
+			"0 solutions before find()", tested.getNumerOfSolutions(), is(0));
+
+		tested.addLine(liniaCzerwona, bus100);
+		tested.addLine(liniaZielona, bus200);
+		tested.addLine(liniaNiebieska, bus300);
+		tested.addLine(liniaPomaranczowa, bus400);
+
+		assertThat(
+			"0 solutions before find()", tested.getNumerOfSolutions(), is(0));
+
+		tested.find(busStops.get('I'), busStops.get('O'), 0);
+		assertThat(tested.getNumerOfSolutions(), is(0));
+		tested.find(busStops.get('I'), busStops.get('O'), 1);
+		assertThat(tested.getNumerOfSolutions(), is(0));
+		tested.find(busStops.get('I'), busStops.get('O'), 2);
+		assertThat(tested.getNumerOfSolutions(), is(greaterThan(0)));
+
+		tested.find(busStops.get('M'), busStops.get('N'), 0);
+		assertThat(tested.getNumerOfSolutions(), is(greaterThan(0)));
+	}
+
+	@Test
 	public void test_loops()
 	{
 		Bus bus100 = new Bus(100);
