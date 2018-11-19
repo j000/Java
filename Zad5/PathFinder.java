@@ -9,6 +9,36 @@ import java.util.HashSet;
 class PathFinder implements PathFinderInterface {
 	static final boolean debug = false;
 
+	class StupidBusStopInterface {
+		public final BusStopInterface stop;
+
+		public StupidBusStopInterface(BusStopInterface _stop)
+		{
+			stop = _stop;
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+
+			StupidBusStopInterface stupid = (StupidBusStopInterface)o;
+
+			if (stop.getName().equals(stupid.stop.getName()))
+				return true;
+			return false;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return stop.getName().hashCode();
+		}
+	}
+
 	class Connection {
 		public final BusStopInterface stop;
 		public final BusInterface bus;
@@ -29,17 +59,22 @@ class PathFinder implements PathFinderInterface {
 
 	private class DFSearcher {
 		private Stack<BusInterface> usedBuses = new Stack<>();
-		private Set<BusStopInterface> visitedStops = new HashSet<>();
+		private Set<StupidBusStopInterface> visitedStops = new HashSet<>();
 		private Stack<Connection> currentSolution = new Stack<>();
 
 		DFSearcher(BusStopInterface from, BusStopInterface to, int transfers)
 		{
+			if (debug)
+				System.out.println(" *** NEW SEARCH *** ");
 			currentSolution.add(0, new Connection(from, null));
-			DFSHelper(from, to, transfers);
+			DFSHelper(new StupidBusStopInterface(from),
+				new StupidBusStopInterface(to),
+				transfers);
 		}
 
-		public void DFSHelper(
-			BusStopInterface from, BusStopInterface to, int transfers)
+		public void DFSHelper(StupidBusStopInterface from,
+			StupidBusStopInterface to,
+			int transfers)
 		{
 			if (transfers < 0)
 				return;
@@ -49,26 +84,22 @@ class PathFinder implements PathFinderInterface {
 			visitedStops.add(from);
 
 			if (debug) {
-				System.out.println(" ### At " + from.getName());
+				System.out.println(" ### At " + from.stop.getName());
 				// System.out.println(currentSolution);
 			}
 
 			for (Connection destination : graph.get(from)) {
-				// if (!usedBuses.empty() && usedBuses.peek() != destination.bus
-				// 	&& usedBuses.contains(destination.bus)) {
-				// 	if (debug)
-				// 		System.out.println("Not getting into the same bus");
-				// 	continue;
-				// }
-
-				if (visitedStops.contains(destination.stop))
+				if (visitedStops.contains(
+						new StupidBusStopInterface(destination.stop)))
 					continue;
 
 				if (debug)
-					System.out.println(from.getName() + ": Checking to "
+					System.out.println(from.stop.getName() + ": Checking to "
 						+ destination.stop.getName());
 
-				if (!usedBuses.empty() && usedBuses.peek() != destination.bus) {
+				if (!usedBuses.empty()
+					&& usedBuses.peek().getBusNumber()
+						!= destination.bus.getBusNumber()) {
 					transfered = true;
 					--transfers;
 					if (debug)
@@ -78,7 +109,7 @@ class PathFinder implements PathFinderInterface {
 
 				currentSolution.push(destination);
 
-				if (destination.stop == to) {
+				if (destination.stop.getName().equals(to.stop.getName())) {
 					if (debug) {
 						System.out.println(
 							" *** Found *** transfers: " + transfers + " *** ");
@@ -88,12 +119,15 @@ class PathFinder implements PathFinderInterface {
 						solutions.add(new ArrayList<>(currentSolution));
 					}
 				} else {
-					DFSHelper(destination.stop, to, transfers);
+					DFSHelper(new StupidBusStopInterface(destination.stop),
+						to,
+						transfers);
 				}
 
 				currentSolution.pop();
 
-				visitedStops.remove(destination.stop);
+				visitedStops.remove(
+					new StupidBusStopInterface(destination.stop));
 
 				usedBuses.pop();
 				if (transfered) {
@@ -104,8 +138,8 @@ class PathFinder implements PathFinderInterface {
 	}
 
 	private List<List<Connection>> solutions;
-	private Map<BusStopInterface, List<Connection>> graph
-		= new HashMap<BusStopInterface, List<Connection>>();
+	private Map<StupidBusStopInterface, List<Connection>> graph
+		= new HashMap<StupidBusStopInterface, List<Connection>>();
 
 	/**
 	 * Metoda dodaje linię autobusową do serwisu. Ten sam autobus
@@ -126,14 +160,18 @@ class PathFinder implements PathFinderInterface {
 			throw new IllegalArgumentException("Line has at least 2 stops");
 
 		BusStopInterface from = line.getBusStop(0);
-		graph.putIfAbsent(from, new ArrayList<Connection>());
+		graph.putIfAbsent(
+			new StupidBusStopInterface(from), new ArrayList<Connection>());
 
 		for (int loop = 1; loop < line.getNumberOfBusStops(); ++loop) {
 			BusStopInterface to = line.getBusStop(loop);
-			graph.putIfAbsent(to, new ArrayList<Connection>());
+			graph.putIfAbsent(
+				new StupidBusStopInterface(to), new ArrayList<Connection>());
 
-			graph.get(from).add(new Connection(to, bus));
-			graph.get(to).add(new Connection(from, bus));
+			graph.get(new StupidBusStopInterface(from))
+				.add(new Connection(to, bus));
+			graph.get(new StupidBusStopInterface(to))
+				.add(new Connection(from, bus));
 
 			from = to;
 		}

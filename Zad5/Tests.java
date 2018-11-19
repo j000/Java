@@ -35,7 +35,8 @@ public class Tests {
 		BusLineInterface liniaCzerwona
 			= new BusLine(new BusStopInterface[] {busStops.get('A'),
 				busStops.get('B'),
-				busStops.get('C'),
+				// busStops.get('C'),
+				new BusStop("C"),
 				busStops.get('D'),
 				busStops.get('E'),
 				busStops.get('F'),
@@ -69,17 +70,30 @@ public class Tests {
 		tested.find(busStops.get('I'), busStops.get('N'), 2);
 		assertThat(tested.getNumerOfSolutions(), is(1));
 		assertThat(tested.getBusStops(0), is(6));
-		assertThat(tested.getBusStop(0, 0), is(busStops.get('I')));
-		assertThat(tested.getBusStop(0, 1), is(busStops.get('C')));
-		assertThat(tested.getBusStop(0, 2), is(busStops.get('D')));
-		assertThat(tested.getBusStop(0, 3), is(busStops.get('E')));
-		assertThat(tested.getBusStop(0, 4), is(busStops.get('M')));
-		assertThat(tested.getBusStop(0, 5), is(busStops.get('N')));
-		assertThat(tested.getBus(0, 0), is(bus200));
-		assertThat(tested.getBus(0, 1), is(bus100));
-		assertThat(tested.getBus(0, 2), is(bus100));
-		assertThat(tested.getBus(0, 3), is(bus300));
-		assertThat(tested.getBus(0, 4), is(bus300));
+		assertThat(
+			tested.getBusStop(0, 0).getName(), is(busStops.get('I').getName()));
+		assertThat(
+			tested.getBusStop(0, 1).getName(), is(busStops.get('C').getName()));
+		assertThat(
+			tested.getBusStop(0, 2).getName(), is(busStops.get('D').getName()));
+		assertThat(
+			tested.getBusStop(0, 3).getName(), is(busStops.get('E').getName()));
+		assertThat(
+			tested.getBusStop(0, 4).getName(), is(busStops.get('M').getName()));
+		assertThat(
+			tested.getBusStop(0, 5).getName(), is(busStops.get('N').getName()));
+		assertThat(
+			tested.getBus(0, 0).getBusNumber(), is(bus200.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 1).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 2).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 3).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 4).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 4).getBusNumber(), is(new Bus(300).getBusNumber()));
 
 		////////////////////
 
@@ -95,20 +109,37 @@ public class Tests {
 		tested.find(busStops.get('C'), busStops.get('E'), 0);
 		assertThat(tested.getNumerOfSolutions(), is(1));
 		assertThat(tested.getBusStops(0), is(3));
-		assertThat(tested.getBus(0, 0), is(bus100));
-		assertThat(tested.getBus(0, 1), is(bus100));
-		assertThat(tested.getBusStop(0, 0), is(busStops.get('C')));
-		assertThat(tested.getBusStop(0, 1), is(busStops.get('D')));
-		assertThat(tested.getBusStop(0, 2), is(busStops.get('E')));
+		assertThat(
+			tested.getBus(0, 0).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 1).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBusStop(0, 0).getName(), is(busStops.get('C').getName()));
+		assertThat(
+			tested.getBusStop(0, 1).getName(), is(busStops.get('D').getName()));
+		assertThat(
+			tested.getBusStop(0, 2).getName(), is(busStops.get('E').getName()));
 
 		tested.find(busStops.get('E'), busStops.get('C'), 0);
 		assertThat(tested.getNumerOfSolutions(), is(1));
 		assertThat(tested.getBusStops(0), is(3));
-		assertThat(tested.getBus(0, 0), is(bus100));
-		assertThat(tested.getBus(0, 1), is(bus100));
-		assertThat(tested.getBusStop(0, 0), is(busStops.get('E')));
-		assertThat(tested.getBusStop(0, 1), is(busStops.get('D')));
-		assertThat(tested.getBusStop(0, 2), is(busStops.get('C')));
+		assertThat(
+			tested.getBus(0, 0).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 1).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBusStop(0, 0).getName(), is(busStops.get('E').getName()));
+		assertThat(
+			tested.getBusStop(0, 1).getName(), is(busStops.get('D').getName()));
+		assertThat(
+			tested.getBusStop(0, 2).getName(), is(busStops.get('C').getName()));
+
+		tested.find(new BusStop("E"), busStops.get('C'), 0);
+		assertThat(tested.getNumerOfSolutions(), is(1));
+		tested.find(busStops.get('E'), new BusStop("C"), 0);
+		assertThat(tested.getNumerOfSolutions(), is(1));
+		tested.find(new BusStop("E"), new BusStop("C"), 0);
+		assertThat(tested.getNumerOfSolutions(), is(1));
 
 		////////////////////
 
@@ -243,26 +274,42 @@ public class Tests {
 		tested.find(busStops.get('A'), busStops.get('H'), 1);
 		assertThat(tested.getNumerOfSolutions(), is(1));
 		assertThat(tested.getBusStops(0), is(4));
-		assertThat(tested.getBus(0, 0), is(bus100));
-		assertThat(tested.getBus(0, 1), is(bus100));
-		assertThat(tested.getBus(0, 2), is(bus300));
-		assertThat(tested.getBusStop(0, 0), is(busStops.get('A')));
-		assertThat(tested.getBusStop(0, 1), is(busStops.get('B')));
-		assertThat(tested.getBusStop(0, 2), is(busStops.get('C')));
-		assertThat(tested.getBusStop(0, 3), is(busStops.get('H')));
+		assertThat(
+			tested.getBus(0, 0).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 1).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 2).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
+			tested.getBusStop(0, 0).getName(), is(busStops.get('A').getName()));
+		assertThat(
+			tested.getBusStop(0, 1).getName(), is(busStops.get('B').getName()));
+		assertThat(
+			tested.getBusStop(0, 2).getName(), is(busStops.get('C').getName()));
+		assertThat(
+			tested.getBusStop(0, 3).getName(), is(busStops.get('H').getName()));
 
 		tested.find(busStops.get('A'), busStops.get('H'), 2);
 		assertThat(tested.getNumerOfSolutions(), is(1));
 		assertThat(tested.getBusStops(0), is(5));
-		assertThat(tested.getBus(0, 0), is(bus100));
-		assertThat(tested.getBus(0, 1), is(bus200));
-		assertThat(tested.getBus(0, 2), is(bus300));
-		assertThat(tested.getBus(0, 3), is(bus300));
-		assertThat(tested.getBusStop(0, 0), is(busStops.get('A')));
-		assertThat(tested.getBusStop(0, 1), is(busStops.get('B')));
-		assertThat(tested.getBusStop(0, 2), is(busStops.get('F')));
-		assertThat(tested.getBusStop(0, 3), is(busStops.get('C')));
-		assertThat(tested.getBusStop(0, 4), is(busStops.get('H')));
+		assertThat(
+			tested.getBus(0, 0).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 1).getBusNumber(), is(bus200.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 2).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 3).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
+			tested.getBusStop(0, 0).getName(), is(busStops.get('A').getName()));
+		assertThat(
+			tested.getBusStop(0, 1).getName(), is(busStops.get('B').getName()));
+		assertThat(
+			tested.getBusStop(0, 2).getName(), is(busStops.get('F').getName()));
+		assertThat(
+			tested.getBusStop(0, 3).getName(), is(busStops.get('C').getName()));
+		assertThat(
+			tested.getBusStop(0, 4).getName(), is(busStops.get('H').getName()));
 
 		tested.find(busStops.get('A'), busStops.get('H'), 3);
 		assertThat(tested.getNumerOfSolutions(), is(0));
