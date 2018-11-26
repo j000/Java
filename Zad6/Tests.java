@@ -241,5 +241,42 @@ public class Tests {
 		assertThat(out[6].getCol(), is(1));
 		assertThat(out[6].getRow(), is(1));
 	}
+	@Test
+	public void test_easy()
+	{
+		PathFinderInterface tested = PathFinderEnum.RIGHT_HAND_TRAFFIC;
+		int map[][] = {{0, 0, 0, 0, 0, 0},
+			{0, 0, 1, 0, 0, 0},
+			{0, 1, 1, 1, 1, 0},
+			{0, 0, 1, 0, 1, 0},
+			{0, 0, 1, 1, 1, 0},
+			{0, 0, 0, 0, 0, 0}};
+		tested.setMap(map);
+		PositionInterface[] out;
+
+		out = tested.getEasiestRoute(new Position(2, 1), new Position(1, 2));
+		assertThat(out, is(notNullValue()));
+		assertThat("go straight twice", out.length, is(11));
+
+		out = tested.getEasiestRoute(new Position(1, 2), new Position(2, 1));
+		assertThat(out, is(notNullValue()));
+		assertThat("go straight twice", out.length, is(11));
+
+		out = tested.getFastestRoute(new Position(1, 2), new Position(2, 1));
+		assertThat(out, is(notNullValue()));
+		assertThat(out.length, is(3));
+
+		out = tested.getFastestRoute(new Position(2, 1), new Position(1, 2));
+		assertThat(out, is(notNullValue()));
+		assertThat(out.length, is(3));
+
+		out = tested.getShortestRoute(new Position(1, 2), new Position(2, 1));
+		assertThat(out, is(notNullValue()));
+		assertThat(out.length, is(3));
+
+		out = tested.getShortestRoute(new Position(2, 1), new Position(1, 2));
+		assertThat(out, is(notNullValue()));
+		assertThat(out.length, is(3));
+	}
 }
 
