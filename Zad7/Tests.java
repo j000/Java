@@ -1,15 +1,11 @@
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 import java.util.List;
 import java.util.Map;
 
-// JUnit4
+import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import static org.junit.Assert.*;
 import org.junit.Test;
-
-// Junit5 (hopefully)
-// import org.junit.jupiter.api.*;
 
 public class Tests {
 	private Point make_point(int x, int y, int z)
