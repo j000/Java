@@ -51,14 +51,13 @@ class GeometricShape implements GeometricShapeInterface {
 	{
 		if (!listOfPoints.remove(point))
 			throw new WrongArgumentException(point);
-		// TODO
 	}
 
 	public void addBefore(Point point, Point beforePoint)
 		throws WrongArgumentException, WrongNumberOfDimensionsException
 	{
 		checkNumberOfDimensions(point);
-		checkNumberOfDimensions(beforePoint);
+		checkNumberOfDimensions(beforePoint); // why?
 
 		int index = listOfPoints.indexOf(beforePoint);
 		if (index == -1)
@@ -71,7 +70,7 @@ class GeometricShape implements GeometricShapeInterface {
 		throws WrongNumberOfDimensionsException, WrongArgumentException
 	{
 		checkNumberOfDimensions(point);
-		checkNumberOfDimensions(afterPoint);
+		checkNumberOfDimensions(afterPoint); // why?
 
 		int index = listOfPoints.indexOf(afterPoint);
 		if (index == -1)
