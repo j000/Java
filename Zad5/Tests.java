@@ -93,6 +93,8 @@ public class Tests {
 		assertThat(
 			tested.getBus(0, 4).getBusNumber(), is(bus300.getBusNumber()));
 		assertThat(
+			tested.getBus(0, 5).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
 			tested.getBus(0, 4).getBusNumber(), is(new Bus(300).getBusNumber()));
 
 		////////////////////
@@ -127,6 +129,8 @@ public class Tests {
 			tested.getBus(0, 0).getBusNumber(), is(bus100.getBusNumber()));
 		assertThat(
 			tested.getBus(0, 1).getBusNumber(), is(bus100.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 2).getBusNumber(), is(bus100.getBusNumber()));
 		assertThat(
 			tested.getBusStop(0, 0).getName(), is(busStops.get('E').getName()));
 		assertThat(
@@ -281,6 +285,8 @@ public class Tests {
 		assertThat(
 			tested.getBus(0, 2).getBusNumber(), is(bus300.getBusNumber()));
 		assertThat(
+			tested.getBus(0, 3).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
 			tested.getBusStop(0, 0).getName(), is(busStops.get('A').getName()));
 		assertThat(
 			tested.getBusStop(0, 1).getName(), is(busStops.get('B').getName()));
@@ -300,6 +306,8 @@ public class Tests {
 			tested.getBus(0, 2).getBusNumber(), is(bus300.getBusNumber()));
 		assertThat(
 			tested.getBus(0, 3).getBusNumber(), is(bus300.getBusNumber()));
+		assertThat(
+			tested.getBus(0, 4).getBusNumber(), is(bus300.getBusNumber()));
 		assertThat(
 			tested.getBusStop(0, 0).getName(), is(busStops.get('A').getName()));
 		assertThat(
