@@ -252,6 +252,9 @@ class PathFinder implements PathFinderInterface {
 	@Override
 	public BusInterface getBus(int solution, int busStop)
 	{
-		return solutions.get(solution).get(busStop + 1).bus;
+		List<Connection> tmp = solutions.get(solution);
+		if (busStop + 1 >= tmp.size())
+			--busStop;
+		return tmp.get(busStop + 1).bus;
 	}
 }
