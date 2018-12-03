@@ -72,27 +72,41 @@ class GeometricShape implements GeometricShapeInterface {
 		checkNumberOfDimensions(point);
 		checkNumberOfDimensions(afterPoint); // why?
 
-		int index = listOfPoints.indexOf(afterPoint);
+		int index = listOfPoints.lastIndexOf(afterPoint);
 		if (index == -1)
 			throw new WrongArgumentException(afterPoint);
 
-		listOfPoints.add(index, point);
+		listOfPoints.add(index + 1, point);
 	}
 
 	public Point removeBefore(Point beforePoint)
 		throws NoSuchPointException, WrongNumberOfDimensionsException,
 			   WrongArgumentException
 	{
-		// TODO
-		return null;
+		checkNumberOfDimensions(beforePoint); // why?
+
+		int index = -1 + listOfPoints.indexOf(beforePoint);
+		if (index == -2)
+			throw new WrongArgumentException(beforePoint);
+		if (index == -1)
+			throw new NoSuchPointException(beforePoint);
+
+		return listOfPoints.remove(index);
 	}
 
 	public Point removeAfter(Point afterPoint)
 		throws NoSuchPointException, WrongNumberOfDimensionsException,
 			   WrongArgumentException
 	{
-		// TODO
-		return null;
+		checkNumberOfDimensions(afterPoint); // why?
+
+		int index = 1 + listOfPoints.lastIndexOf(afterPoint);
+		if (index == 0)
+			throw new WrongArgumentException(afterPoint);
+		if (index == listOfPoints.size())
+			throw new NoSuchPointException(afterPoint);
+
+		return listOfPoints.remove(index);
 	}
 
 	public List<Point> get()
