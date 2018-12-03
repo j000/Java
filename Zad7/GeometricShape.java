@@ -89,7 +89,7 @@ class GeometricShape implements GeometricShapeInterface {
 	 */
 	public boolean addAfter(Point point, Point afterPoint)
 	{
-		int index = 1 + commands.get(current).indexOf(afterPoint);
+		int index = 1 + commands.get(current).lastIndexOf(afterPoint);
 		if (index == 0)
 			return false;
 
@@ -129,7 +129,7 @@ class GeometricShape implements GeometricShapeInterface {
 	 */
 	public Point removeAfter(Point afterPoint)
 	{
-		int index = 1 + commands.get(current).indexOf(afterPoint);
+		int index = 1 + commands.get(current).lastIndexOf(afterPoint);
 		if (index == 0 || index == commands.get(current).size())
 			return null;
 
