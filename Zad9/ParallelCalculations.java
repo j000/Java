@@ -43,12 +43,6 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 			}
 		}
 
-		public void addAndReset(NumberCruncher3000 another)
-		{
-			add(another);
-			another.reset();
-		}
-
 		public int[][] getHistogram()
 		{
 			return _histogram.clone();
@@ -132,6 +126,8 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 	{
 		for (Helper t : _listOfThreads) {
 			t.die();
+		}
+		for (Helper t : _listOfThreads) {
 			try {
 				t.join();
 			} catch (InterruptedException e) {
