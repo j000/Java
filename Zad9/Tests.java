@@ -20,15 +20,18 @@ import java.util.Collections;
 import java.util.SortedMap;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.LinkedHashMap;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.BeforeClass;
 
 public class Tests {
 	private static final double DELTA = 1e-5;
+	private static final List<Long> systemThreadsIds = new ArrayList<>();
 
 	static class Point implements PointInterface {
 		private final int[] positions = new int[2];
@@ -75,11 +78,7 @@ public class Tests {
 		}
 	}
 
-	/**
-	 * Get the thread list with CPU consumption and the ThreadInfo for each
-	 * thread sorted by the CPU time.
-	 */
-	private List<Map.Entry<Long, ThreadInfo>> getThreadList()
+	private static Map<ThreadInfo, Long> getThreadList()
 	{
 		ThreadMXBean tmbean = ManagementFactory.getThreadMXBean();
 
@@ -95,27 +94,20 @@ public class Tests {
 		long[] tids = tmbean.getAllThreadIds();
 		ThreadInfo[] tinfos = tmbean.getThreadInfo(tids);
 
-		// build a map with key = CPU time and value = ThreadInfo
-		SortedMap<Long, ThreadInfo> map = new TreeMap<Long, ThreadInfo>();
-		for (int i = 0; i < tids.length; i++) {
-			long cpuTime = tmbean.getThreadCpuTime(tids[i]);
+		// build a map with key = ThreadInfo and value = CPU time
+		Map<ThreadInfo, Long> map = new LinkedHashMap<>();
+		for (int i = tids.length - 1; i >= 0; --i) {
 			// filter out threads that have been terminated
-			if (cpuTime != -1 && tinfos[i] != null
-				&& !tinfos[i].getThreadName().equals("main")
-				&& !tinfos[i].getThreadName().equals("Finalizer")
-				&& !tinfos[i].getThreadName().equals("Reference Handler")
-				&& !tinfos[i].getThreadName().equals("Signal Dispatcher")) {
-				map.put(new Long(cpuTime), tinfos[i]);
-			}
+			if (tinfos[i] == null || systemThreadsIds.contains(tids[i]))
+				continue;
+			long cpuTime = tmbean.getThreadCpuTime(tids[i]);
+			if (cpuTime == -1)
+				continue;
+
+			map.put(tinfos[i], new Long(cpuTime));
 		}
 
-		// build the thread list and sort it with CPU time
-		// in decreasing order
-		Set<Map.Entry<Long, ThreadInfo>> set = map.entrySet();
-		List<Map.Entry<Long, ThreadInfo>> list
-			= new ArrayList<Map.Entry<Long, ThreadInfo>>(set);
-		Collections.reverse(list);
-		return list;
+		return map;
 	}
 
 	public void prettyPrint(int[][] arr)
@@ -137,18 +129,25 @@ public class Tests {
 		}
 	}
 
+	public void printThreads(Map<ThreadInfo, Long> threads)
+	{
+		threads.forEach((k, v)
+							-> System.out.printf("\n%3d (%-15s): %16d",
+								k.getThreadId(),
+								k.getThreadName(),
+								v));
+	}
+
 	public void printThreads()
 	{
-		List<Map.Entry<Long, ThreadInfo>> threads = getThreadList();
-		// System.out.printf("\n%3s (%-15s): %16s", "Id:", "Thread name:", "CPU
-		// time:");
-		threads.forEach(t -> {
-			ThreadInfo tmp = t.getValue();
-			System.out.printf("\n%3d (%-15s): %16d",
-				tmp.getThreadId(),
-				tmp.getThreadName(),
-				t.getKey());
-		});
+		printThreads(getThreadList());
+	}
+
+	@BeforeClass
+	public static void findSystemThreads()
+	{
+		Map<ThreadInfo, Long> threads = getThreadList();
+		threads.forEach((k, v) -> systemThreadsIds.add(k.getThreadId()));
 	}
 
 	@Test
@@ -195,9 +194,9 @@ public class Tests {
 			});
 
 			try {
-				future.get(100, TimeUnit.MILLISECONDS);
+				future.get(50, TimeUnit.MILLISECONDS);
 			} catch (TimeoutException ex) {
-				fail("suspendCalculations() should not take forever");
+				fail("suspendCalculations() should return quickly");
 			}
 			executor.shutdown();
 		}
@@ -206,8 +205,7 @@ public class Tests {
 			double[] tmp = tested.getGeometricCenter();
 			assertThat(tmp, is(not(nullValue())));
 			/* (╯°□°）╯︵ ┻━┻
-			 * java...
-			 */
+			 * java... */
 			// assertThat(tmp, is(arrayWithSize(equalTo(2))));
 			// assertThat(tmp, everyItem(closeTo(2.0, DELTA)));
 			assertThat(tmp[0], is(closeTo(2.0, DELTA)));
@@ -231,26 +229,66 @@ public class Tests {
 			// prettyPrint(histogram);
 		}
 
-		synchronized (this)
 		{
-			// TODO: here someone should check for cpu usage...
-			System.out.print("\nNo user threads should run here:");
-			printThreads();
-			this.wait(1000 /* ms */);
-			System.out.print("\nLook for changes:");
-			printThreads();
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum1[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum1[0] += v);
+				System.out.print("\nNo user threads should run here:");
+				printThreads(threads);
+			}
+
+			synchronized (this)
+			{
+				this.wait(1000 /* ms */);
+			}
+
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum2[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum2[0] += v);
+				System.out.print("\nLook for changes here if assertion fails:");
+				printThreads(threads);
+			}
+			assertThat("No user threads should be running",
+				sum2[0] - sum1[0],
+				is(lessThan(1000000L)));
 		}
 
 		tested.continueCalculations();
 
-		synchronized (this)
 		{
-			// TODO: here someone should check for cpu usage...
-			System.out.print("\nUser threads should run here:");
-			printThreads();
-			this.wait(1000 /* ms */);
-			System.out.print("\nLook for changes:");
-			printThreads();
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum1[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum1[0] += v);
+				System.out.print("\nUser threads should run here:");
+				printThreads(threads);
+			}
+
+			synchronized (this)
+			{
+				this.wait(1000 /* ms */);
+			}
+
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum2[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum2[0] += v);
+				System.out.print("\nLook for changes here if assertion fails:");
+				printThreads(threads);
+			}
+			assertThat("User threads should be running",
+				sum2[0] - sum1[0],
+				is(greaterThan(1000000L)));
 		}
 
 		// tested.suspendCalculations();
@@ -273,7 +311,6 @@ public class Tests {
 			double[] tmp = tested.getGeometricCenter();
 			assertThat(tmp[0], is(closeTo(2.0, DELTA)));
 			assertThat(tmp[1], is(closeTo(2.0, DELTA)));
-			System.out.println("\n" + tmp[0] + ", " + tmp[1]);
 			int[][] histogram = tested.getHistogram();
 			for (int i = 0; i < histogram.length; ++i) {
 				for (int j = 0; j < histogram[i].length; ++j) {
@@ -287,7 +324,7 @@ public class Tests {
 							is(equalTo(0)));
 				}
 			}
-			prettyPrint(histogram);
+			// prettyPrint(histogram);
 		}
 	}
 }
