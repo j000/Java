@@ -78,6 +78,23 @@ public class Tests {
 		}
 	}
 
+	static class HopefullyBetterPointGenerator
+		implements PointGeneratorInterface {
+		private final int x;
+		private final int y;
+
+		public HopefullyBetterPointGenerator(int _x, int _y)
+		{
+			x = _x;
+			y = _y;
+		}
+
+		public PointInterface getPoint()
+		{
+			return new Point(x, y);
+		}
+	}
+
 	private static Map<ThreadInfo, Long> getThreadList()
 	{
 		ThreadMXBean tmbean = ManagementFactory.getThreadMXBean();
@@ -153,12 +170,12 @@ public class Tests {
 	@Test
 	public void test_example() throws InterruptedException, ExecutionException
 	{
-		final SimplePointGenerator spg = new SimplePointGenerator();
+		final PointGeneratorInterface pg = new SimplePointGenerator();
 		final ParallelCalculationsInterface tested = new ParallelCalculations();
 		final int startingThreads = Thread.activeCount();
 
 		tested.setNumberOfThreads(4);
-		tested.setPointGenerator(spg);
+		tested.setPointGenerator(pg);
 
 		// tested.start();
 		{
@@ -315,6 +332,187 @@ public class Tests {
 			for (int i = 0; i < histogram.length; ++i) {
 				for (int j = 0; j < histogram[i].length; ++j) {
 					if (i < 5 && i == j)
+						assertThat("histogram[" + i + "][" + j + "]",
+							histogram[i][j],
+							is(greaterThan(0)));
+					else
+						assertThat("histogram[" + i + "][" + j + "]",
+							histogram[i][j],
+							is(equalTo(0)));
+				}
+			}
+			// prettyPrint(histogram);
+		}
+	}
+
+	@Test
+	public void test_concurrent()
+		throws InterruptedException, ExecutionException
+	{
+		final PointGeneratorInterface pg
+			= new HopefullyBetterPointGenerator(2, 2);
+		final ParallelCalculationsInterface tested = new ParallelCalculations();
+		final int startingThreads = Thread.activeCount();
+
+		tested.setNumberOfThreads(4);
+		tested.setPointGenerator(pg);
+
+		// tested.start();
+		{
+			ExecutorService executor = Executors.newCachedThreadPool();
+			Future<Void> future = executor.submit(() -> {
+				tested.start();
+				return null;
+			});
+
+			try {
+				future.get(50, TimeUnit.MILLISECONDS);
+			} catch (TimeoutException ex) {
+				fail("start() should start new tasks and return quickly");
+			}
+			executor.shutdown();
+		}
+
+		assertThat("There should be more threads",
+			Thread.activeCount(),
+			is(greaterThan(startingThreads)));
+
+		synchronized (this)
+		{
+			this.wait(1000 /* ms */);
+		}
+
+		// tested.suspendCalculations();
+		{
+			ExecutorService executor = Executors.newCachedThreadPool();
+			Future<Void> future = executor.submit(() -> {
+				tested.suspendCalculations();
+				return null;
+			});
+
+			try {
+				future.get(50, TimeUnit.MILLISECONDS);
+			} catch (TimeoutException ex) {
+				fail("suspendCalculations() should return quickly");
+			}
+			future.get();
+			executor.shutdown();
+		}
+
+		{
+			double[] tmp = tested.getGeometricCenter();
+			assertThat(tmp, is(not(nullValue())));
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			// assertThat(tmp, is(arrayWithSize(equalTo(2))));
+			// assertThat(tmp, everyItem(closeTo(2.0, DELTA)));
+			assertThat(tmp[0], is(closeTo(2.0, DELTA)));
+			assertThat(tmp[1], is(closeTo(2.0, DELTA)));
+
+			int[][] histogram = tested.getHistogram();
+			assertThat(
+				histogram, is(allOf(not(nullValue()), not(emptyArray()))));
+			for (int i = 0; i < histogram.length; ++i) {
+				for (int j = 0; j < histogram[i].length; ++j) {
+					if (i == 2 && i == j)
+						assertThat("histogram[" + i + "][" + j + "]",
+							histogram[i][j],
+							is(greaterThan(0)));
+					else
+						assertThat("histogram[" + i + "][" + j + "]",
+							histogram[i][j],
+							is(equalTo(0)));
+				}
+			}
+			// prettyPrint(histogram);
+		}
+
+		{
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum1[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum1[0] += v);
+				System.out.print("\nNo user threads should run here:");
+				printThreads(threads);
+			}
+
+			synchronized (this)
+			{
+				this.wait(1000 /* ms */);
+			}
+
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum2[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum2[0] += v);
+				System.out.print("\nLook for changes here if assertion fails:");
+				printThreads(threads);
+			}
+			assertThat("No user threads should be running",
+				sum2[0] - sum1[0],
+				is(lessThan(1000000L)));
+		}
+
+		tested.continueCalculations();
+
+		{
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum1[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum1[0] += v);
+				System.out.print("\nUser threads should run here:");
+				printThreads(threads);
+			}
+
+			synchronized (this)
+			{
+				this.wait(1000 /* ms */);
+			}
+
+			/* (╯°□°）╯︵ ┻━┻
+			 * java... */
+			final long sum2[] = {0L};
+			{
+				Map<ThreadInfo, Long> threads = getThreadList();
+				threads.forEach((k, v) -> sum2[0] += v);
+				System.out.print("\nLook for changes here if assertion fails:");
+				printThreads(threads);
+			}
+			assertThat("User threads should be running",
+				sum2[0] - sum1[0],
+				is(greaterThan(1000000L)));
+		}
+
+		// tested.suspendCalculations();
+		{
+			ExecutorService executor = Executors.newCachedThreadPool();
+			Future<Void> future = executor.submit(() -> {
+				tested.suspendCalculations();
+				return null;
+			});
+
+			try {
+				future.get(100, TimeUnit.MILLISECONDS);
+			} catch (TimeoutException ex) {
+				fail("suspendCalculations() should not take forever");
+			}
+			executor.shutdown();
+		}
+
+		{
+			double[] tmp = tested.getGeometricCenter();
+			assertThat(tmp[0], is(closeTo(2.0, DELTA)));
+			assertThat(tmp[1], is(closeTo(2.0, DELTA)));
+			int[][] histogram = tested.getHistogram();
+			for (int i = 0; i < histogram.length; ++i) {
+				for (int j = 0; j < histogram[i].length; ++j) {
+					if (i == 2 && i == j)
 						assertThat("histogram[" + i + "][" + j + "]",
 							histogram[i][j],
 							is(greaterThan(0)));
