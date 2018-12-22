@@ -1,15 +1,44 @@
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import java.util.List;
 import java.util.ArrayList;
 
 public class ParallelCalculations implements ParallelCalculationsInterface {
+	private static class HistogramCalculator {
+		private static int MAX = PointInterface.MAX_POSITION + 1;
+
+		private AtomicIntegerArray _histogram
+			= new AtomicIntegerArray(MAX * MAX);
+
+		private static int calculateIndex(int x, int y)
+		{
+			return x * MAX + y;
+		}
+
+		public void inc(int x, int y)
+		{
+			_histogram.incrementAndGet(calculateIndex(x, y));
+		}
+
+		public int[][] get()
+		{
+			int[][] out = new int[MAX][MAX];
+			for (int i = 0; i < MAX; ++i)
+				for (int j = 0; j < MAX; ++j) {
+					out[i][j] = _histogram.get(calculateIndex(i, j));
+				}
+			return out;
+		}
+	}
+
 	private class NumberCruncher3000 {
-		private int[][] _histogram;
 		private int[] _wektor;
 		private int _liczbaPunktow;
+		private HistogramCalculator _hc;
 
-		public NumberCruncher3000()
+		public NumberCruncher3000(HistogramCalculator hc)
 		{
+			_hc = hc;
 			reset();
 		}
 
@@ -17,7 +46,7 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 		{
 			++_liczbaPunktow;
 			int[] polozenie = p.getPositions();
-			++_histogram[polozenie[0]][polozenie[1]];
+			_hc.inc(polozenie[0], polozenie[1]);
 			_wektor[0] += polozenie[0];
 			_wektor[1] += polozenie[1];
 		}
@@ -25,8 +54,6 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 		public void reset()
 		{
 			_liczbaPunktow = 0;
-			_histogram = new int[PointInterface.MAX_POSITION + 1]
-								[PointInterface.MAX_POSITION + 1];
 			_wektor = new int[2];
 		}
 
@@ -35,17 +62,11 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 			_liczbaPunktow += another._liczbaPunktow;
 			_wektor[0] += another._wektor[0];
 			_wektor[1] += another._wektor[1];
-
-			for (int i = 0; i < _histogram.length; ++i) {
-				for (int j = 0; j < _histogram[i].length; ++j) {
-					_histogram[i][j] += another._histogram[i][j];
-				}
-			}
 		}
 
 		public int[][] getHistogram()
 		{
-			return _histogram.clone();
+			return _hc.get();
 		}
 
 		public double[] getGeometricCenter()
@@ -59,11 +80,12 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 
 	private class Helper extends Thread {
 		private final AtomicBoolean _keepGoing = new AtomicBoolean(true);
-		private final NumberCruncher3000 _nc = new NumberCruncher3000();
+		private final NumberCruncher3000 _nc;
 		private final PointGeneratorInterface _generator;
 
-		public Helper(PointGeneratorInterface generator)
+		public Helper(HistogramCalculator hc, PointGeneratorInterface generator)
 		{
+			_nc = new NumberCruncher3000(hc);
 			_generator = generator;
 		}
 
@@ -93,7 +115,8 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 	private PointGeneratorInterface _generator = null;
 
 	private List<Helper> _listOfThreads = new ArrayList<>();
-	private NumberCruncher3000 _nc = new NumberCruncher3000();
+	private HistogramCalculator _hc = new HistogramCalculator();
+	private NumberCruncher3000 _nc = new NumberCruncher3000(_hc);
 
 	public void setPointGenerator(PointGeneratorInterface generator)
 	{
@@ -141,7 +164,7 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 	public void continueCalculations()
 	{
 		for (int i = 0; i < _threads; ++i) {
-			Helper tmp = new Helper(_generator);
+			Helper tmp = new Helper(_hc, _generator);
 			tmp.setName("Helper " + i);
 			tmp.setDaemon(true);
 			tmp.start();
