@@ -12,7 +12,7 @@ public class Position2D {
 
 	/**
 	 * Zwraca współrzędna X punktu
-	 * 
+	 *
 	 * @return - współrzędna x punktu
 	 */
 	public int getX() {
@@ -21,7 +21,7 @@ public class Position2D {
 
 	/**
 	 * Zwraca współrzędna Y punktu
-	 * 
+	 *
 	 * @return - współrzędna y punktu
 	 */
 	public int getY() {
@@ -30,7 +30,7 @@ public class Position2D {
 
 	/**
 	 * Klonuje punkt.
-	 * 
+	 *
 	 * @return - zwraca obiekt o identycznych współrzędnych jak ten użyty do
 	 *         klonowania
 	 */
@@ -43,15 +43,15 @@ public class Position2D {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + x;
-		result = prime * result + y;
+		result += prime * result + x;
+		result += prime * result + y;
 		return result;
 	}
 
 	/**
 	 * Porownuje dwa obiekty typu punkt. Są równe jeśli współrzędne x i y się
 	 * pokrywają
-	 * 
+	 *
 	 * @return - prawda jesli dostarczony obiekt jest punktem i wspolrzedne obu
 	 *         porownywanych punktow sa identyczne
 	 */
@@ -76,6 +76,6 @@ public class Position2D {
 		return "Position2D{" +
 				"x=" + x +
 				", y=" + y +
-				'}';
+				"}";
 	}
 }
