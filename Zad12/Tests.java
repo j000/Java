@@ -110,8 +110,8 @@ class Checker {
 	@MethodDisabled
 	public void disabled2()
 	{
-		fail(
-			"Should not run disabled methods, even when it's marked as MethodToStart");
+		fail("Should not run disabled methods, "
+			+ "even when it's marked as MethodToStart");
 	}
 
 	@StringParameter("Lol")
