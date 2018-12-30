@@ -38,7 +38,6 @@ BinPackParameters: false
 AlwaysBreakBeforeMultilineStrings: true
 ---
 Language: Java
-ReflowComments: false
 AllowShortFunctionsOnASingleLine: None
 BreakAfterJavaFieldAnnotations: true
 # Language: Cpp
