@@ -32,29 +32,16 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 	}
 
 	private class NumberCruncher3000 {
-		private int[] _wektor;
-		private int _liczbaPunktow;
-		private HistogramCalculator _hc;
-
-		public NumberCruncher3000(HistogramCalculator hc)
-		{
-			_hc = hc;
-			reset();
-		}
+		private int[] _wektor = new int[2];
+		private int _liczbaPunktow = 0;
 
 		public void add(PointInterface p)
 		{
 			++_liczbaPunktow;
 			int[] polozenie = p.getPositions();
-			_hc.inc(polozenie[0], polozenie[1]);
+			ParallelCalculations.this._hc.inc(polozenie[0], polozenie[1]);
 			_wektor[0] += polozenie[0];
 			_wektor[1] += polozenie[1];
-		}
-
-		public void reset()
-		{
-			_liczbaPunktow = 0;
-			_wektor = new int[2];
 		}
 
 		public void add(NumberCruncher3000 another)
@@ -71,21 +58,19 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 
 		public double[] getGeometricCenter()
 		{
-			double[] out = new double[2];
-			out[0] = (double)_wektor[0] / _liczbaPunktow;
-			out[1] = (double)_wektor[1] / _liczbaPunktow;
+			double[] out = new double[] {(double)_wektor[0] / _liczbaPunktow,
+				(double)_wektor[1] / _liczbaPunktow};
 			return out;
 		}
 	}
 
 	private class Helper extends Thread {
-		private final AtomicBoolean _keepGoing = new AtomicBoolean(true);
 		private final NumberCruncher3000 _nc;
 		private final PointGeneratorInterface _generator;
 
 		public Helper(HistogramCalculator hc, PointGeneratorInterface generator)
 		{
-			_nc = new NumberCruncher3000(hc);
+			_nc = new NumberCruncher3000();
 			_generator = generator;
 		}
 
@@ -93,16 +78,11 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 		public void run()
 		{
 			PointInterface p;
-			while (_keepGoing.get()) {
+			while (ParallelCalculations.this._keepGoing.get()) {
 				p = _generator.getPoint();
 
 				_nc.add(p);
 			}
-		}
-
-		public void die()
-		{
-			_keepGoing.set(false);
 		}
 
 		public NumberCruncher3000 getData()
@@ -116,7 +96,8 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 
 	private List<Helper> _listOfThreads = new ArrayList<>();
 	private HistogramCalculator _hc = new HistogramCalculator();
-	private NumberCruncher3000 _nc = new NumberCruncher3000(_hc);
+	private NumberCruncher3000 _nc = new NumberCruncher3000();
+	private AtomicBoolean _keepGoing = new AtomicBoolean();
 
 	public void setPointGenerator(PointGeneratorInterface generator)
 	{
@@ -125,31 +106,17 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 
 	public void setNumberOfThreads(int threads)
 	{
-		if (threads <= 0) {
-			throw new IllegalArgumentException(
-				"Ilość wątków musi być liczbą dodatnią");
-		}
 		_threads = threads;
 	}
 
 	public void start()
 	{
-		if (_generator == null) {
-			throw new IllegalArgumentException(
-				"Metoda setPointGenerator() nie została wywołana");
-		}
-		if (_threads <= 0) {
-			throw new IllegalArgumentException(
-				"Metoda setNumberOfThreads() nie została wywołana");
-		}
 		continueCalculations();
 	}
 
 	public void suspendCalculations()
 	{
-		for (Helper t : _listOfThreads) {
-			t.die();
-		}
+		_keepGoing.set(false);
 		for (Helper t : _listOfThreads) {
 			try {
 				t.join();
@@ -163,6 +130,7 @@ public class ParallelCalculations implements ParallelCalculationsInterface {
 
 	public void continueCalculations()
 	{
+		_keepGoing.set(true);
 		for (int i = 0; i < _threads; ++i) {
 			Helper tmp = new Helper(_hc, _generator);
 			tmp.setName("Helper " + i);
