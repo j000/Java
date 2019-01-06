@@ -5,7 +5,8 @@ public class Position2D {
 	private final int x;
 	private final int y;
 
-	public Position2D(int x, int y) {
+	public Position2D(int x, int y)
+	{
 		this.x = x;
 		this.y = y;
 	}
@@ -15,7 +16,8 @@ public class Position2D {
 	 *
 	 * @return - współrzędna x punktu
 	 */
-	public int getX() {
+	public int getX()
+	{
 		return x;
 	}
 
@@ -24,7 +26,8 @@ public class Position2D {
 	 *
 	 * @return - współrzędna y punktu
 	 */
-	public int getY() {
+	public int getY()
+	{
 		return y;
 	}
 
@@ -35,16 +38,18 @@ public class Position2D {
 	 *         klonowania
 	 */
 	@Override
-	public Position2D clone() {
+	public Position2D clone()
+	{
 		return new Position2D(this.getX(), this.getY());
 	}
 
 	@Override
-	public int hashCode() {
+	public int hashCode()
+	{
 		final int prime = 31;
 		int result = 1;
-		result += prime * result + x;
-		result += prime * result + y;
+		result = prime * result + x;
+		result = prime * result + y;
 		return result;
 	}
 
@@ -56,14 +61,15 @@ public class Position2D {
 	 *         porownywanych punktow sa identyczne
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(Object obj)
+	{
 		if (this == obj)
 			return true;
 		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Position2D other = (Position2D) obj;
+		Position2D other = (Position2D)obj;
 		if (x != other.x)
 			return false;
 		if (y != other.y)
@@ -72,10 +78,9 @@ public class Position2D {
 	}
 
 	@Override
-	public String toString() {
-		return "Position2D{" +
-				"x=" + x +
-				", y=" + y +
-				"}";
+	public String toString()
+	{
+		return "Position2D{"
+			+ "x=" + x + ", y=" + y + "}";
 	}
 }

@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 public interface GameInterface {
 	/**
 	 * Zwraca aktualny wynik punktowy gry
-	 * 
+	 *
 	 * @return - wynik punktowy gry
 	 */
 	public int getScore();
@@ -47,14 +47,15 @@ public interface GameInterface {
 	 */
 	public BasketControlInterface getController();
 
-    /**
-     * Metoda pozwala na zarejestrowanie obiektu, który będzie informowany
-     * o każdym nowym obiekcie, który pojawi się na planszy.
-     *
-     * @param listener obiekt reprezentujący obiekt oczekujący
-     *                 na pojawianie się na planszy nowych obiektów.
-     */
-	public void addNewObjectListener( Consumer<FallingObjectBasicInterface> listener );
+	/**
+	 * Metoda pozwala na zarejestrowanie obiektu, który będzie informowany
+	 * o każdym nowym obiekcie, który pojawi się na planszy.
+	 *
+	 * @param listener obiekt reprezentujący obiekt oczekujący
+	 *                 na pojawianie się na planszy nowych obiektów.
+	 */
+	public void addNewObjectListener(
+		Consumer<FallingObjectBasicInterface> listener);
 
 	/**
 	 * Metoda umożliwia rejestrację obiektu, który będzie informowany o
@@ -62,5 +63,5 @@ public interface GameInterface {
 	 *
 	 * @param listener obiekt oczekujący na zmianę rozmiaru koszyka.
 	 */
-	public void addShrinkBasketListener(Consumer<Integer> listener );
+	public void addShrinkBasketListener(Consumer<Integer> listener);
 }

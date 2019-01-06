@@ -6,5 +6,5 @@ public interface ControllerInterface {
 	 *
 	 * @param gi referencja do obiektu gru
 	 */
-	public void setGame( GameInterface gi );
+	public void setGame(GameInterface gi);
 }
