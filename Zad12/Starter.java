@@ -22,6 +22,8 @@ class Starter implements Consumer<String> {
 			List<Method> allMethods
 				= new ArrayList<>(Arrays.asList(c.getDeclaredMethods()));
 
+			// publiczne
+			allMethods.removeIf(m -> !Modifier.isPublic(m.getModifiers()));
 			// MethodToStart
 			allMethods.removeIf(
 				m -> !m.isAnnotationPresent(MethodToStart.class));
