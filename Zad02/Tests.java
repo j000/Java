@@ -42,27 +42,23 @@ public class Tests {
 
 		result = calc.equidistantPoints(
 			createPoint(new double[] {0}), createPoint(new double[] {3}), 2);
-		assertThat(
-			result,
-			equalTo(new Point[] {createPoint(new double[] {1}),
-								 createPoint(new double[] {2})}));
+		assertThat(result,
+			equalTo(new Point[] {
+				createPoint(new double[] {1}), createPoint(new double[] {2})}));
 
-		result = calc.equidistantPoints(
-			createPoint(new double[] {0, 0}),
+		result = calc.equidistantPoints(createPoint(new double[] {0, 0}),
 			createPoint(new double[] {3, 3}),
 			2);
-		assertThat(
-			result,
+		assertThat(result,
 			equalTo(new Point[] {createPoint(new double[] {1, 1}),
-								 createPoint(new double[] {2, 2})}));
+				createPoint(new double[] {2, 2})}));
 
 		Point expected[] = new Point[100];
 		for (int i = 0; i < 100; i++) {
 			expected[i] = createPoint(new double[] {i, 1});
 		}
 
-		result = calc.equidistantPoints(
-			createPoint(new double[] {-1, 1}),
+		result = calc.equidistantPoints(createPoint(new double[] {-1, 1}),
 			createPoint(new double[] {100, 1}),
 			100);
 
@@ -100,14 +96,14 @@ public class Tests {
 
 		result = calc.geometricCenter(
 			new Point[] {createPoint(new double[] {0, 2}),
-						 createPoint(new double[] {2, 0})});
+				createPoint(new double[] {2, 0})});
 		expected = createPoint(new double[] {1, 1});
 
 		assertThat(result, equalTo(expected));
 
 		result = calc.geometricCenter(
 			new Point[] {createPoint(new double[] {1, 1}),
-						 createPoint(new double[] {2, 3})});
+				createPoint(new double[] {2, 3})});
 		assertThat(result, equalTo(createPoint(new double[] {1.5, 2})));
 	}
 
@@ -135,17 +131,14 @@ public class Tests {
 			createPoint(new double[] {0}), createPoint(new double[] {-1}), 1);
 		assertThat(result, equalTo(createPoint(new double[] {-2})));
 
-		result = calc.next(
-			createPoint(new double[] {0, 4}),
+		result = calc.next(createPoint(new double[] {0, 4}),
 			createPoint(new double[] {-1, 4}),
 			1);
 		assertThat(result, equalTo(createPoint(new double[] {-2, 4})));
 
-		result = calc.next(
-			createPoint(new double[] {1, 2}),
+		result = calc.next(createPoint(new double[] {1, 2}),
 			createPoint(new double[] {1, 1}),
 			2);
 		assertThat(result, equalTo(createPoint(new double[] {1, -1})));
 	}
 }
-

@@ -94,8 +94,8 @@ public class Tests {
 			tested.getBus(0, 4).getBusNumber(), is(bus300.getBusNumber()));
 		assertThat(
 			tested.getBus(0, 5).getBusNumber(), is(bus300.getBusNumber()));
-		assertThat(
-			tested.getBus(0, 4).getBusNumber(), is(new Bus(300).getBusNumber()));
+		assertThat(tested.getBus(0, 4).getBusNumber(),
+			is(new Bus(300).getBusNumber()));
 
 		////////////////////
 

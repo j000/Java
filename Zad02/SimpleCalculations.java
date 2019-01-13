@@ -9,16 +9,18 @@ class SimpleCalculations {
 	 * firstPoint a pierwszym z wygenerowanych punktów oraz
 	 * secondPoint a ostatnim z wygenerowanych punktów.
 	 *
-	 * @param firstPoint  pierwszy punkt z dwóch, pomiędzy którymi należy wygenerować te
-	 *                    zwracane w wyniku
-	 * @param secondPoint drugi punkt z dwóch,  pomiędzy którymi należy wygenerować te
-	 *                    zwracane w wyniku
+	 * @param firstPoint  pierwszy punkt z dwóch, pomiędzy którymi należy
+	 *     wygenerować te zwracane w wyniku
+	 * @param secondPoint drugi punkt z dwóch,  pomiędzy którymi należy
+	 *     wygenerować te zwracane w wyniku
 	 * @param points      liczba punktów w tablicy będącej wynikiem pracy metody
-	 * @return tablica obiektów typu Point znajdujących się równych odległościach pomiędzy
+	 * @return tablica obiektów typu Point znajdujących się równych
+	 *     odległościach pomiędzy
 	 * firstPoint a secondPoint.
 	 */
-	public Point[] equidistantPoints(
-		Point firstPoint, Point secondPoint, int points)
+	public Point[] equidistantPoints(Point firstPoint,
+		Point secondPoint,
+		int points)
 	{
 		if (firstPoint == null || secondPoint == null || points == 0)
 			return null;
@@ -33,11 +35,10 @@ class SimpleCalculations {
 		for (int dimension = 0; dimension < firstPoint.getNumberOfDimensions();
 			 ++dimension) {
 			double step = (secondPoint.getPosition(dimension)
-						   - firstPoint.getPosition(dimension))
+							  - firstPoint.getPosition(dimension))
 				/ (points + 1);
 			for (int j = 0; j < points; ++j) {
-				output[j].setPosition(
-					dimension,
+				output[j].setPosition(dimension,
 					(j + 1) * step + firstPoint.getPosition(dimension));
 			}
 		}
@@ -49,7 +50,8 @@ class SimpleCalculations {
 	 * Metoda zwraca położenie środka geometrycznego wyliczonego na podstawie
 	 * przekazanego zbioru punktów. Środek geometryczny to średnia
 	 * arytmetyczna położeń poszczególnych punktów.
-	 * <a href="https://pl.wikipedia.org/wiki/%C5%9Arodek_masy">Środek geometryczny</a>
+	 * <a href="https://pl.wikipedia.org/wiki/%C5%9Arodek_masy">Środek
+	 * geometryczny</a>
 	 *
 	 * @param points zbiór punktów
 	 * @return środek geometryczny zbioru points
@@ -79,15 +81,17 @@ class SimpleCalculations {
 	}
 
 	/**
-	 * Metoda zwraca obiekt klasy Point reprezentujący punkt znajdujący się na prostej
-	 * przechodzącej przez firstPoint oraz secondPoint w odległości
+	 * Metoda zwraca obiekt klasy Point reprezentujący punkt znajdujący się na
+	 * prostej przechodzącej przez firstPoint oraz secondPoint w odległości
 	 * distance od punktu secondPoint.
 	 *
 	 * @param firstPoint  pierwszy punkt
 	 * @param secondPoint drugi punkt
-	 * @param distance    odleglosc od punktu secondPoint w jakiej ma sie znajdowac punkt bedacy wynikie
+	 * @param distance    odleglosc od punktu secondPoint w jakiej ma sie
+	 *     znajdowac punkt bedacy wynikie
 	 *                    pracy metody
-	 * @return punkt znajdujacy się w odległości distance od secondPoint na prostej przechodzącej
+	 * @return punkt znajdujacy się w odległości distance od secondPoint na
+	 *     prostej przechodzącej
 	 * przez firstPoint i secondPoint.
 	 */
 	public Point next(Point firstPoint, Point secondPoint, double distance)
@@ -104,19 +108,17 @@ class SimpleCalculations {
 		double length = 0;
 		for (int dimension = 0; dimension < result.getNumberOfDimensions();
 			 ++dimension) {
-			length += square(
-				secondPoint.getPosition(dimension)
+			length += square(secondPoint.getPosition(dimension)
 				- firstPoint.getPosition(dimension));
 		}
 		length = Math.sqrt(length);
 		for (int dimension = 0; dimension < result.getNumberOfDimensions();
 			 ++dimension) {
-			result.setPosition(
-				dimension,
+			result.setPosition(dimension,
 				secondPoint.getPosition(dimension)
 					+ distance
 						* (secondPoint.getPosition(dimension)
-						   - firstPoint.getPosition(dimension))
+							  - firstPoint.getPosition(dimension))
 						/ length);
 		}
 		return result;

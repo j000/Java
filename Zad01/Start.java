@@ -16,8 +16,11 @@ class Start {
 			double przyblizenie = szereg(x);
 			double roznica = wartoscSinCos - przyblizenie;
 			System.out.printf(
-				"x=%7.4f sin(x)cos(x)=%8.6f aprox=%8.6f delta=%10.8f\n", x,
-				wartoscSinCos, przyblizenie, roznica);
+				"x=%7.4f sin(x)cos(x)=%8.6f aprox=%8.6f delta=%10.8f\n",
+				x,
+				wartoscSinCos,
+				przyblizenie,
+				roznica);
 		}
 	}
 

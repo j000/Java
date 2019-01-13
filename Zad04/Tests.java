@@ -48,7 +48,6 @@ public class Tests {
 			assertThat("Changed while unlocked", bp.get(i), is(i + 1.5));
 		}
 
-
 		// two passwords
 		bp.lock("pass1");
 		bp.lock("pass2");
@@ -84,13 +83,13 @@ public class Tests {
 		bp.lock("pass");
 		for (int i = 0; i < 3; ++i) {
 			bp.move(i, -1);
-			assertThat("Move did not work while locked", bp.get(i), is(i + 0.5));
+			assertThat(
+				"Move did not work while locked", bp.get(i), is(i + 0.5));
 		}
 		bp.unlock("pass");
 		for (int i = 0; i < 3; ++i) {
 			bp.move(i, -1);
 			assertThat("Move worked while unlocked", bp.get(i), is(i - 0.5));
 		}
-
 	}
 }

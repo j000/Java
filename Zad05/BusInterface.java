@@ -1,7 +1,7 @@
 public interface BusInterface {
-    /**
-     * Metoda zwraca numer autobusu
-     * @return numer autobusu
-     */
-    public int getBusNumber();
+	/**
+	 * Metoda zwraca numer autobusu
+	 * @return numer autobusu
+	 */
+	public int getBusNumber();
 }

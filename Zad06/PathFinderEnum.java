@@ -88,8 +88,9 @@ public enum PathFinderEnum implements PathFinderInterface {
 			public final Vertex to;
 			public final double weight;
 			public final Turn turn;
-			public Edge(
-				final Vertex _to, final double _weight, final Turn _turn)
+			public Edge(final Vertex _to,
+				final double _weight,
+				final Turn _turn)
 			{
 				to = _to;
 				weight = _weight;
@@ -114,8 +115,9 @@ public enum PathFinderEnum implements PathFinderInterface {
 			}
 		}
 
-		public void createConnections(
-			final Position _from, final Position _to, final Direction _dir)
+		public void createConnections(final Position _from,
+			final Position _to,
+			final Direction _dir)
 		{
 			final Map<Direction, Vertex> vertices = verticesList.get(_from);
 			final Direction incoming = _dir.right().right();
@@ -416,20 +418,20 @@ public enum PathFinderEnum implements PathFinderInterface {
 	}
 
 	/**
-	 * Metoda zwraca tablicę położeń na mapie, które reprezentują najkrótszą trasę
-	 * pomiędzy położeniem begin a położeniem end. Trasa najkrótsza to trasa
-	 * przechodząca przez możliwie najmniej położeń pośrednich. W przypadku, gdy
-	 * istnieją trasy o identycznej długości o wyborze decyduje preferowany kierunek
-	 * ruchu na skrzyżowaniach. Trasa jako pozycje skrajne zawiera położenia begin i
-	 * end.
+	 * Metoda zwraca tablicę położeń na mapie, które reprezentują najkrótszą
+	 * trasę pomiędzy położeniem begin a położeniem end. Trasa najkrótsza to
+	 * trasa przechodząca przez możliwie najmniej położeń pośrednich. W
+	 * przypadku, gdy istnieją trasy o identycznej długości o wyborze decyduje
+	 * preferowany kierunek ruchu na skrzyżowaniach. Trasa jako pozycje skrajne
+	 * zawiera położenia begin i end.
 	 *
 	 * @param begin położenie startowe
 	 * @param end   położenie końcowe
 	 *
 	 * @return najkrótsza trasa od begin do end
 	 */
-	public PositionInterface[] getShortestRoute(
-		PositionInterface begin, PositionInterface end)
+	public PositionInterface[] getShortestRoute(PositionInterface begin,
+		PositionInterface end)
 	{
 		return graph.findPath(
 			new Position(begin), new Position(end), (Graph.Edge e) -> 1.);
@@ -438,16 +440,16 @@ public enum PathFinderEnum implements PathFinderInterface {
 
 	/**
 	 * Metoda zwraca tablicę położeń na mapie, które reprezentują najłatwiejszą
-	 * trasę pomiędzy położeniem begin a położeniem end. O wyborze trasy decyduje
-	 * preferowany kierunek ruchu na skrzyżowaniach. Trasa jako pozycje skrajne
-	 * zawiera położenia begin i end.
+	 * trasę pomiędzy położeniem begin a położeniem end. O wyborze trasy
+	 * decyduje preferowany kierunek ruchu na skrzyżowaniach. Trasa jako pozycje
+	 * skrajne zawiera położenia begin i end.
 	 *
 	 * @param begin położenie startowe
 	 * @param end   położenie końcowe
 	 * @return najłatwiejsza trasa od begin do end
 	 */
-	public PositionInterface[] getEasiestRoute(
-		PositionInterface begin, PositionInterface end)
+	public PositionInterface[] getEasiestRoute(PositionInterface begin,
+		PositionInterface end)
 	{
 		return graph.findPath(
 			new Position(begin), new Position(end), (Graph.Edge e) -> 0.);
@@ -455,19 +457,19 @@ public enum PathFinderEnum implements PathFinderInterface {
 	}
 
 	/**
-	 * Metoda zwraca tablicę położeń tablicy, które reprezentują najszybszą trasę
-	 * pomiędzy położeniem begin a położeniem end. Trasa najszybsza to trasa
-	 * przechodząca przez położenia, których suma wartości w mapie jest najmniejsza.
-	 * W przypadku, gdy istnieją trasy o identycznym czasie przejazdu o wyborze
-	 * decyduje preferowany kierunek ruchu na skrzyżowaniach. Trasa jako pozycje
-	 * skrajne zawiera położenia begin i end.
+	 * Metoda zwraca tablicę położeń tablicy, które reprezentują najszybszą
+	 * trasę pomiędzy położeniem begin a położeniem end. Trasa najszybsza to
+	 * trasa przechodząca przez położenia, których suma wartości w mapie jest
+	 * najmniejsza. W przypadku, gdy istnieją trasy o identycznym czasie
+	 * przejazdu o wyborze decyduje preferowany kierunek ruchu na
+	 * skrzyżowaniach. Trasa jako pozycje skrajne zawiera położenia begin i end.
 	 *
 	 * @param begin położenie startowe
 	 * @param end   położenie końcowe
 	 * @return najszybsza trasa od begin do end
 	 */
-	public PositionInterface[] getFastestRoute(
-		PositionInterface begin, PositionInterface end)
+	public PositionInterface[] getFastestRoute(PositionInterface begin,
+		PositionInterface end)
 	{
 		return graph.findPath(
 			new Position(begin), new Position(end), (Graph.Edge e) -> e.weight);

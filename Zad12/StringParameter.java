@@ -3,5 +3,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StringParameter {
-    public String value();
+	public String value();
 }

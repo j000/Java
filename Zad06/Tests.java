@@ -279,4 +279,3 @@ public class Tests {
 		assertThat(out.length, is(3));
 	}
 }
-

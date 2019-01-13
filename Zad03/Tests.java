@@ -8,15 +8,19 @@ public class Tests {
 	@Test
 	public void test1()
 	{
-		assertThat("before proper initalization", Ship.getShip(0), is(nullValue()));
+		assertThat(
+			"before proper initalization", Ship.getShip(0), is(nullValue()));
 
-		assertThat("before proper initalization", Ship.getShip(1), is(nullValue()));
+		assertThat(
+			"before proper initalization", Ship.getShip(1), is(nullValue()));
 
-		assertThat("before proper initalization", Ship.getShip(20), is(nullValue()));
+		assertThat(
+			"before proper initalization", Ship.getShip(20), is(nullValue()));
 
 		Ship.setLimit(new ShipSizeLimit(new int[] {1, 2, 1}));
 
-		assertThat("getShip(0) always returns null", Ship.getShip(0), is(nullValue()));
+		assertThat(
+			"getShip(0) always returns null", Ship.getShip(0), is(nullValue()));
 
 		assertThat("create ship", Ship.getShip(1), is(not(nullValue())));
 
@@ -52,11 +56,14 @@ public class Tests {
 
 		assertThat("new limit", Ship.getShip(1), is(nullValue()));
 
-		assertThat("new limit (old should produce)", Ship.getShip(2), is(nullValue()));
+		assertThat(
+			"new limit (old should produce)", Ship.getShip(2), is(nullValue()));
 
 		assertThat("new limit", Ship.getShip(3), is(nullValue()));
 
-		assertThat("new limit (old shouldn't produce)", Ship.getShip(4), is(not(nullValue())));
+		assertThat("new limit (old shouldn't produce)",
+			Ship.getShip(4),
+			is(not(nullValue())));
 
 		assertThat("new limit", Ship.getShip(4), is(nullValue()));
 	}

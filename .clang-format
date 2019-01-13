@@ -35,6 +35,7 @@ AlwaysBreakTemplateDeclarations: true
 AlignEscapedNewlines: Left
 BinPackArguments: false
 BinPackParameters: false
+AllowAllParametersOfDeclarationOnNextLine: false
 AlwaysBreakBeforeMultilineStrings: true
 ---
 Language: Java
